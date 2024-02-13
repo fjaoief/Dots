@@ -9,7 +9,6 @@ public class SampleUnitAuthoring : MonoBehaviour
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent(entity, new SampleUnitComponentData());
-            
         }
     }
 }

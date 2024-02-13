@@ -1,18 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using Unity.Burst;
+using Unity.Entities;
 
-public class SampleUnitMoveSystem : MonoBehaviour
+namespace _1.Scripts.DOTS.System
 {
-    // Start is called before the first frame update
-    void Start()
+    public partial struct SampleUnitMoveSystem : ISystem
     {
-        
-    }
+        [BurstCompile]
+        public void OnCreate(ref SystemState state)
+        {
+            
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        [BurstCompile]
+        public void OnUpdate(ref SystemState state)
+        {
+
+        }
+
+        [BurstCompile]
+        public void OnDestroy(ref SystemState state)
+        {
+
+        }
     }
 }
