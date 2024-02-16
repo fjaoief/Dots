@@ -1,6 +1,7 @@
 using Unity.Entities;
 using Unity.Entities.UniversalDelegates;
 using UnityEngine;
+using Unity.Mathematics;
 
 public class SampleUnitAuthoring : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class SampleUnitAuthoring : MonoBehaviour
 
 public struct SampleUnitComponentData : IComponentData
 {
+    public int2 index;
     public int movementspeed;
     public int hp;
     public int dmg;
