@@ -21,8 +21,10 @@ public class SampleUnitAuthoring : MonoBehaviour
 
 public struct SampleUnitComponentData : IComponentData
 {
-    public int2 index;
-    public int movementspeed;
-    public int hp;
+    public int order; //순서
+    public int2 index; // 타일
+    public int2 destIndex;
+    public int movementspeed; //이동 속도
+    public int hp; 
     public int dmg;
 }
