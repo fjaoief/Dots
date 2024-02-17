@@ -12,11 +12,12 @@ namespace _1.Scripts.DOTS.System
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            
+           /*
             var query = SystemAPI.QueryBuilder().WithAll<MapTIleAuthoringComponentData>().WithAll<LocalTransform>().Build();
             var queryMask = query.GetEntityQueryMask();
             //블확실함. 나중에 시간 들여서 확실한 시스템 순서 정해야함. 성능적으로 문제 없으면 업데이트문에 던져버리면 됨
             state.RequireForUpdate(query);
+            */ 
         }
 
         [BurstCompile]
