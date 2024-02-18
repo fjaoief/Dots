@@ -33,11 +33,12 @@ namespace _1.Scripts.DOTS.System
                  //해당 칸으로 이동(인덱스 변경, 타일 공백 여부 변경)
                  //인덱스를 통해 주변 타일의 공백 여부 계산
                  
-                 var index = sampleUnit.ValueRW.index;
+                 /*var index = sampleUnit.ValueRW.index;
                  if(transform.ValueRW.Position.y < 2)
                  {
                  transform.ValueRW.Position.y += dt * (float)0.1;
-                 }
+                 }*/
+                 
                  //이동. 나중에 job으로 실행하는 것으로 변경해야 함
                  
                  

@@ -1,4 +1,5 @@
-﻿using Unity.Burst;
+﻿using _1.Scripts.DOTS.System.Jobs;
+using Unity.Burst;
 using Unity.Entities;
 
 namespace _1.Scripts.DOTS.System
@@ -14,6 +15,13 @@ namespace _1.Scripts.DOTS.System
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            var ecbSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
+
+            new MovementJob
+            {
+                Time = (float)SystemAPI.Time.ElapsedTime,
+                ECBWriter = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter()
+            }.ScheduleParallel();
 
         }
 

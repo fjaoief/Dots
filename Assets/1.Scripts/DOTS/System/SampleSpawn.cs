@@ -37,7 +37,9 @@ namespace _1.Scripts.DOTS.System
                 ecb.SetComponentForLinkedEntityGroup(SampleUnit, queryMask, new SampleUnitComponentData
                 {
                     index = new int2(x, y),
-                    hp = 1
+                    hp = 3,
+                    movementspeed = 0.1f,
+                    dmg = 1
                 });
                 ecb.SetComponent(SampleUnit, new LocalTransform()
                 {
