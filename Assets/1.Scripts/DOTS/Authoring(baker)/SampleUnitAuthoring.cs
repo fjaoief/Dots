@@ -1,3 +1,4 @@
+using _1.Scripts.DOTS.Components___Tags;
 using Unity.Entities;
 using Unity.Entities.UniversalDelegates;
 using UnityEngine;
@@ -20,6 +21,9 @@ public class SampleUnitAuthoring : MonoBehaviour
                 dmg = authoring.dmg,
                 team = 0,
                 });
+            AddComponent(entity,new MovingTag());
+            AddComponent(entity, new AttackTag());
+            AddComponent(entity, new LazyTag());
         }
     }
 }

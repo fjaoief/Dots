@@ -1,10 +1,10 @@
-﻿using _1.Scripts.DOTS.Authoring_baker_;
+﻿using _1.Scripts.DOTS.System.Jobs;
+using _1.Scripts.DOTS.Authoring_baker_;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using _1.Scripts.DOTS.System.Jobs;
 
 namespace _1.Scripts.DOTS.System
 {
@@ -29,14 +29,12 @@ namespace _1.Scripts.DOTS.System
             EntityQuery unitQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<SampleUnitComponentData>().Build(ref state);
             NativeArray<SampleUnitComponentData> sampleUnits = unitQuery.ToComponentDataArray<SampleUnitComponentData>(Allocator.TempJob);
             MapMakerComponentData mapMaker = SystemAPI.GetSingleton<MapMakerComponentData>();
-
             FindDestIndexJob findDestIndexJob = new(){
                 MapMaker = mapMaker,
                 SampleUnits = sampleUnits,
             };
             findDestIndexJob.ScheduleParallel();
             state.Dependency.Complete();
-            unitQuery.Dispose();
             sampleUnits.Dispose();
 
 
