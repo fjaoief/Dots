@@ -26,7 +26,7 @@ namespace _1.Scripts.DOTS.System
   //          int x = 0;
             var dt = SystemAPI.Time.DeltaTime;
             
-             foreach (var (transform, sampleUnit) in SystemAPI.Query<RefRW<LocalTransform>,RefRW<SampleUnitComponentData>>())
+            // foreach (var (transform, sampleUnit) in SystemAPI.Query<RefRW<LocalTransform>,RefRW<SampleUnitComponentData>>())
              {
                  //각 엔티티의 길찾기 알고리즘은 여기에
                  //가장 가까운 적을 찾고 가까워지기 위한 빈칸을 목적 타일로 설정

@@ -1,6 +1,7 @@
 ﻿using _1.Scripts.DOTS.System.Jobs;
 using Unity.Burst;
 using Unity.Entities;
+using UnityEngine;
 
 namespace _1.Scripts.DOTS.System
 {
@@ -20,9 +21,10 @@ namespace _1.Scripts.DOTS.System
             new MovementJob
             {
                 Time = (float)SystemAPI.Time.ElapsedTime,
-                ECBWriter = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter()
+                //ECBWriter = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter()
             }.ScheduleParallel();
-
+            state.Dependency.Complete();
+            Debug.Log("Complete");
         }
 
         [BurstCompile]
