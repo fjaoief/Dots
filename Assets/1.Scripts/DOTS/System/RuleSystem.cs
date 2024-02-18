@@ -4,6 +4,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using _1.Scripts.DOTS.System.Jobs;
 
 namespace _1.Scripts.DOTS.System
 {
@@ -25,7 +26,20 @@ namespace _1.Scripts.DOTS.System
         {
   //          int x = 0;
             var dt = SystemAPI.Time.DeltaTime;
-            
+            EntityQuery unitQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<SampleUnitComponentData>().Build(ref state);
+            NativeArray<SampleUnitComponentData> sampleUnits = unitQuery.ToComponentDataArray<SampleUnitComponentData>(Allocator.TempJob);
+            MapMakerComponentData mapMaker = SystemAPI.GetSingleton<MapMakerComponentData>();
+
+            FindDestIndexJob findDestIndexJob = new(){
+                MapMaker = mapMaker,
+                SampleUnits = sampleUnits,
+            };
+            findDestIndexJob.ScheduleParallel();
+            state.Dependency.Complete();
+            unitQuery.Dispose();
+            sampleUnits.Dispose();
+
+
             // foreach (var (transform, sampleUnit) in SystemAPI.Query<RefRW<LocalTransform>,RefRW<SampleUnitComponentData>>())
              {
                  //각 엔티티의 길찾기 알고리즘은 여기에

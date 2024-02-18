@@ -14,7 +14,12 @@ public class SampleUnitAuthoring : MonoBehaviour
         public override void Bake(SampleUnitAuthoring authoring)
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponent(entity, new SampleUnitComponentData{movementspeed = authoring.movementspeed, hp = authoring.hp, dmg = authoring.dmg});
+            AddComponent(entity, new SampleUnitComponentData{
+                movementspeed = authoring.movementspeed, 
+                hp = authoring.hp, 
+                dmg = authoring.dmg,
+                team = 0,
+                });
         }
     }
 }
@@ -27,4 +32,5 @@ public struct SampleUnitComponentData : IComponentData
     public float movementspeed; //이동 속도
     public int hp; 
     public int dmg;
+    public int team;
 }
