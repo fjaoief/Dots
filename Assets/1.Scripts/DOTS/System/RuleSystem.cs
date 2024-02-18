@@ -31,11 +31,11 @@ namespace _1.Scripts.DOTS.System
             NativeArray<SampleUnitComponentData> sampleUnits = unitQuery.ToComponentDataArray<SampleUnitComponentData>(Allocator.TempJob);
             MapMakerComponentData mapMaker = SystemAPI.GetSingleton<MapMakerComponentData>();
 
-            FindTargetJob findTargetJob = new(){
+            FindDestIndexJob findDestIndexJob = new(){
                 MapMaker = mapMaker,
                 SampleUnits = sampleUnits,
             };
-            findTargetJob.ScheduleParallel();
+            findDestIndexJob.ScheduleParallel();
             state.Dependency.Complete();
             unitQuery.Dispose();
             sampleUnits.Dispose();

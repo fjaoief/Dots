@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace _1.Scripts.DOTS.System.Jobs
 {
     [BurstCompile]
-    public partial struct FindTargetJob : IJobEntity
+    public partial struct FindDestIndexJob : IJobEntity
     {
         [ReadOnly] public NativeArray<SampleUnitComponentData> SampleUnits;
         [ReadOnly] public MapMakerComponentData MapMaker;
