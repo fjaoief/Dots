@@ -4,19 +4,19 @@ using Unity.Mathematics;
 
 namespace _1.Scripts.DOTS.Authoring_baker_
 {
-    public class MapTIleAuthoringAuthoring : MonoBehaviour
+    public class MapTileAuthoring : MonoBehaviour
     {
-        private class MapTIleAuthoringBaker : Baker<MapTIleAuthoringAuthoring>
+        private class MapTileAuthoringBaker : Baker<MapTileAuthoring>
         {
-            public override void Bake(MapTIleAuthoringAuthoring authoring)
+            public override void Bake(MapTileAuthoring authoring)
             {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
-                AddComponent(entity, new MapTIleAuthoringComponentData());
+                AddComponent(entity, new MapTileAuthoringComponentData());
             }
         }
     }
 
-    public struct MapTIleAuthoringComponentData : IComponentData
+    public struct MapTileAuthoringComponentData : IComponentData
     { 
         public int2 index;
         public int soldier;

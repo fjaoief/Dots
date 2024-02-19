@@ -7,7 +7,7 @@ using Unity.Transforms;
 
 namespace _1.Scripts.DOTS.System
 {
-    public partial struct MapTIleSpawner : ISystem
+    public partial struct MapTileSpawner : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -29,7 +29,7 @@ namespace _1.Scripts.DOTS.System
             ecb.Instantiate(MapMaker.MapPrefab, tiles);
             
             // 타일 정렬
-            var query = SystemAPI.QueryBuilder().WithAll<MapTIleAuthoringComponentData>().WithAll<LocalTransform>().Build();
+            var query = SystemAPI.QueryBuilder().WithAll<MapTileAuthoringComponentData>().WithAll<LocalTransform>().Build();
             var queryMask = query.GetEntityQueryMask();
             int x = 0;
             int y = 0;
@@ -37,7 +37,7 @@ namespace _1.Scripts.DOTS.System
             
             foreach (var tile in tiles)
             {
-                ecb.SetComponentForLinkedEntityGroup(tile, queryMask, new MapTIleAuthoringComponentData
+                ecb.SetComponentForLinkedEntityGroup(tile, queryMask, new MapTileAuthoringComponentData
                 {
                     index = new int2(x, y),
                     soldier = 0,
