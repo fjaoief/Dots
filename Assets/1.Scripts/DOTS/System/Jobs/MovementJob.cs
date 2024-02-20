@@ -1,21 +1,54 @@
-﻿using Unity.Entities;
+﻿using _1.Scripts.DOTS.Components___Tags;
+using Unity.Burst;
+using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using _1.Scripts.DOTS.Authoring_baker_;
+using Unity.Collections;
+using UnityEngine;
+//using System.Diagnostics;
+
 
 namespace _1.Scripts.DOTS.System.Jobs
 {
+    [BurstCompile]
+    [WithAll(typeof(MovingTag))]
     public partial struct MovementJob : IJobEntity
     {
         public float Time;
+        public float3 Direction;
+         [ReadOnly] public MapMakerComponentData MapMaker;
         //public EntityCommandBuffer.ParallelWriter ECBWriter;
         // excute 쿼리에 moving tag 추가 예정
-        public void Execute(Entity sampleUnits, ref LocalTransform transform, in SampleUnitComponentData sampleUnitComponentData)
+        public void Execute(ref LocalTransform transform, EnabledRefRW<MovingTag> movingTag, SampleUnitComponentData sampleUnitComponentData)
         {
-            if (transform.Position.y < 2)
+            if (math.any(transform.Position != Int2tofloat3(sampleUnitComponentData.destIndex)))
             {
-                transform.Position.y = sampleUnitComponentData.movementspeed * Time + transform.Position.y;
-            }else{
+                transform.Position = MoveTowards(transform.Position, Int2tofloat3(sampleUnitComponentData.destIndex) , Time*sampleUnitComponentData.movementspeed);
+            }
+            else{
+                sampleUnitComponentData.index = sampleUnitComponentData.destIndex;
+                movingTag.ValueRW = false;
                 // moving tag 취소
             }}
+        public static float3 MoveTowards(float3 current, float3 target, float maxDistanceDelta)
+    {
+        float deltaX = target.x - current.x;
+        float deltaY = target.y - current.y;
+
+        float sqdist = deltaX * deltaX + deltaY * deltaY;
+
+        if (sqdist == 0 || sqdist <= maxDistanceDelta * maxDistanceDelta)
+            return target;
+        var dist = math.sqrt(sqdist);
+
+        return new float3(current.x + deltaX / dist * maxDistanceDelta,
+            current.y + deltaY / dist * maxDistanceDelta, 0
+            );
     }
+        public static float3 Int2tofloat3(int2 index){
+        return new float3(index.x,index.y,0);
+    }
+    }
+    
 }

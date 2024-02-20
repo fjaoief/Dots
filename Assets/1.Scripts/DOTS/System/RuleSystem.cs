@@ -3,6 +3,7 @@ using _1.Scripts.DOTS.Authoring_baker_;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using UnityEngine;
 using Unity.Mathematics;
 using Unity.Transforms;
 using _1.Scripts.DOTS.Components___Tags;
@@ -36,7 +37,7 @@ namespace _1.Scripts.DOTS.System
             //Attack Tag, Moving Tag, Lazy Tag 중 하나라도 가진 엔티티가 없을 경우
             if(behaviorTagQuery.IsEmpty){
                 //행동을 결정해야 함(공격할 타겟 찾기 or 이동할 위치 찾기)
-
+                Debug.Log("FIND JOB START");
                 NativeArray<SampleUnitComponentData> sampleUnits = unitQuery.ToComponentDataArray<SampleUnitComponentData>(Allocator.TempJob);
                 MapMakerComponentData mapMaker = SystemAPI.GetSingleton<MapMakerComponentData>();
                 FindDestIndexJob findDestIndexJob = new(){

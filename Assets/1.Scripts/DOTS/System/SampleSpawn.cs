@@ -32,16 +32,16 @@ namespace _1.Scripts.DOTS.System
             var queryMask = query.GetEntityQueryMask();
             int x = 0;
             int y = 0;
-            
+            int newteam = 0;
             foreach (var SampleUnit in SampleUnits)
             {
                 ecb.SetComponentForLinkedEntityGroup(SampleUnit, queryMask, new SampleUnitComponentData
                 {
                     index = new int2(x, y),
                     hp = 3,
-                    movementspeed = 0.1f,
+                    movementspeed = 5f,
                     dmg = 1,
-                    team = x%2
+                    team = newteam
                 });
                 ecb.SetComponentEnabled<MovingTag>(SampleUnit, false);
                 ecb.SetComponentEnabled<AttackTag>(SampleUnit, false);
@@ -60,6 +60,9 @@ namespace _1.Scripts.DOTS.System
                 {
                     x = 0;
                     y++;
+                }
+                if(x>50){
+                    newteam = 1;
                 }
                 
             }
