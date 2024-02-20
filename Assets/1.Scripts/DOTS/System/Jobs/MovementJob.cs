@@ -16,7 +16,6 @@ namespace _1.Scripts.DOTS.System.Jobs
     public partial struct MovementJob : IJobEntity
     {
         public float Time;
-        public float3 Direction;
          [ReadOnly] public MapMakerComponentData MapMaker;
         //public EntityCommandBuffer.ParallelWriter ECBWriter;
         // excute 쿼리에 moving tag 추가 예정
@@ -24,13 +23,15 @@ namespace _1.Scripts.DOTS.System.Jobs
         {
             if (math.any(transform.Position != Int2tofloat3(sampleUnitComponentData.destIndex)))
             {
-                transform.Position = MoveTowards(transform.Position, Int2tofloat3(sampleUnitComponentData.destIndex) , Time*sampleUnitComponentData.movementspeed);
+                transform.Position = MoveTowards(transform.Position, Int2tofloat3(sampleUnitComponentData.destIndex)*MapMaker.width , Time*sampleUnitComponentData.movementspeed);
             }
             else{
                 sampleUnitComponentData.index = sampleUnitComponentData.destIndex;
                 movingTag.ValueRW = false;
                 // moving tag 취소
             }}
+
+        //MoveTowards의 Unity.Mathematic버전
         public static float3 MoveTowards(float3 current, float3 target, float maxDistanceDelta)
     {
         float deltaX = target.x - current.x;
@@ -46,6 +47,7 @@ namespace _1.Scripts.DOTS.System.Jobs
             current.y + deltaY / dist * maxDistanceDelta, 0
             );
     }
+    //인덱스를 float3 형식으로 바꿔주는 코드
         public static float3 Int2tofloat3(int2 index){
         return new float3(index.x,index.y,0);
     }
