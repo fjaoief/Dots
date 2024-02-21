@@ -22,9 +22,9 @@ namespace _1.Scripts.DOTS.System.Jobs
         {
             if (math.all(transform.Position == Int2tofloat3(sampleUnitComponentData.destIndex)*MapMaker.width))
             {
+                Debug.Log("Cancel Moving Tag of "+sampleUnitComponentData.index +sampleUnitComponentData.destIndex);
                 sampleUnitComponentData.index = sampleUnitComponentData.destIndex;
                 movingTag.ValueRW = false;
-                Debug.Log("Cancel Moving Tag of "+sampleUnitComponentData.index +sampleUnitComponentData.destIndex);
             }
             else{
                 transform.Position = MoveTowards(transform.Position, Int2tofloat3(sampleUnitComponentData.destIndex)*MapMaker.width , Time*sampleUnitComponentData.movementspeed);
