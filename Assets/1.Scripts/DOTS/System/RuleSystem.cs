@@ -14,6 +14,7 @@ namespace _1.Scripts.DOTS.System
     {
         EntityQuery behaviorTagQuery;
         EntityQuery unitQuery;
+        EntityQuery tileQuery;
     
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -27,6 +28,7 @@ namespace _1.Scripts.DOTS.System
             state.RequireForUpdate<MapMakerComponentData>();
             behaviorTagQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<AttackTag, MovingTag, LazyTag>().Build(ref state);
             unitQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<SampleUnitComponentData>().Build(ref state);
+            tileQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<MapTileAuthoringComponentData>().Build(ref state);
         }
 
         [BurstCompile]
@@ -36,10 +38,16 @@ namespace _1.Scripts.DOTS.System
 
             //Attack Tag, Moving Tag, Lazy Tag 중 하나라도 가진 엔티티가 없을 경우
             if(behaviorTagQuery.IsEmpty){
+                MapMakerComponentData mapMaker = SystemAPI.GetSingleton<MapMakerComponentData>();
+
+                //타일 배열
+                //인덱스가 (3, 5)인 타일 = tiles[3 + 5 * mapMaker.number]
+                NativeArray<MapTileAuthoringComponentData> tiles = tileQuery.ToComponentDataArray<MapTileAuthoringComponentData>(Allocator.TempJob);
+
                 //행동을 결정해야 함(공격할 타겟 찾기 or 이동할 위치 찾기)
                 //Debug.Log("FIND JOB START");
                 NativeArray<SampleUnitComponentData> sampleUnits = unitQuery.ToComponentDataArray<SampleUnitComponentData>(Allocator.TempJob);
-                MapMakerComponentData mapMaker = SystemAPI.GetSingleton<MapMakerComponentData>();
+
                 FindDestIndexJob findDestIndexJob = new(){
                     MapMaker = mapMaker,
                     SampleUnits = sampleUnits,
@@ -47,6 +55,7 @@ namespace _1.Scripts.DOTS.System
                 findDestIndexJob.ScheduleParallel();
                 state.Dependency.Complete();
                 sampleUnits.Dispose();
+                tiles.Dispose();
             }
             else{
 
