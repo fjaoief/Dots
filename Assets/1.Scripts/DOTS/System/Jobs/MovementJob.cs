@@ -12,7 +12,6 @@ using UnityEngine;
 namespace _1.Scripts.DOTS.System.Jobs
 {
     [BurstCompile]
-    [WithAll(typeof(MovingTag))]
     public partial struct MovementJob : IJobEntity
     {
         public float Time;
@@ -21,13 +20,15 @@ namespace _1.Scripts.DOTS.System.Jobs
         // excute 쿼리에 moving tag 추가 예정
         public void Execute(ref LocalTransform transform, EnabledRefRW<MovingTag> movingTag, SampleUnitComponentData sampleUnitComponentData)
         {
-            if (math.any(transform.Position != Int2tofloat3(sampleUnitComponentData.destIndex)))
+            if (math.all(transform.Position == Int2tofloat3(sampleUnitComponentData.destIndex)*MapMaker.width))
             {
-                transform.Position = MoveTowards(transform.Position, Int2tofloat3(sampleUnitComponentData.destIndex)*MapMaker.width , Time*sampleUnitComponentData.movementspeed);
-            }
-            else{
                 sampleUnitComponentData.index = sampleUnitComponentData.destIndex;
                 movingTag.ValueRW = false;
+                Debug.Log("Cancel Moving Tag of "+sampleUnitComponentData.index +sampleUnitComponentData.destIndex);
+            }
+            else{
+                transform.Position = MoveTowards(transform.Position, Int2tofloat3(sampleUnitComponentData.destIndex)*MapMaker.width , Time*sampleUnitComponentData.movementspeed);
+                Debug.Log("Moving entity" + sampleUnitComponentData.index);
                 // moving tag 취소
             }}
 

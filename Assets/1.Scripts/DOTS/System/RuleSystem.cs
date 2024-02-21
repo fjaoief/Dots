@@ -39,7 +39,7 @@ namespace _1.Scripts.DOTS.System
             //Attack Tag, Moving Tag, Lazy Tag 중 하나라도 가진 엔티티가 없을 경우
             if(behaviorTagQuery.IsEmpty){
                 MapMakerComponentData mapMaker = SystemAPI.GetSingleton<MapMakerComponentData>();
-
+                Debug.Log("Find behavior");
                 //타일 배열
                 //인덱스가 (3, 5)인 타일 = tiles[3 + 5 * mapMaker.number]
                 NativeArray<MapTileAuthoringComponentData> tiles = tileQuery.ToComponentDataArray<MapTileAuthoringComponentData>(Allocator.TempJob);
