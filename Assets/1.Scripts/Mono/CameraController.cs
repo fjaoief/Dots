@@ -145,9 +145,9 @@ public class CameraController : MonoBehaviour
         // 카메라가 최대로 이동할 수 있는 위치 조정
         if (targetCameraPosition.x > MaxX)
         {
-            targetCameraPosition = new Vector3(MaxX, targetCameraPosition.x, targetCameraPosition.z);
+            targetCameraPosition = new Vector3(MaxX, targetCameraPosition.y, targetCameraPosition.z);
         }
-        else if (targetCameraPosition.x < MinY)
+        if (targetCameraPosition.x < MinX)
         {
             targetCameraPosition = new Vector3(MinX, targetCameraPosition.y, targetCameraPosition.z);
         }
@@ -155,10 +155,11 @@ public class CameraController : MonoBehaviour
         {
             targetCameraPosition = new Vector3(targetCameraPosition.x, MaxY, targetCameraPosition.z);
         }
-        else if (targetCameraPosition.y < MinY)
+        if (targetCameraPosition.y < MinY)
         {
             targetCameraPosition = new Vector3(targetCameraPosition.x, MinY, targetCameraPosition.z);
         }
+
         //선형보간 Lerp를 통한 부드러운 움직임 구현
         transform.position = Vector3.Lerp(currentCameraPosition, targetCameraPosition, 0.5f);
     }
