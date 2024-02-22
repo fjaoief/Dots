@@ -694,8 +694,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ZoomSpeed: 1
-  MinZoomSize: 3
-  MaxZoomSize: 10
+  MinZoomSize: 1
+  MaxZoomSize: 100
   DirectionForceReduceRate: 0.935
   DirectionForceMin: 0.001
   MaxX: 5

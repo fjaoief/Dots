@@ -8,17 +8,17 @@ public class CameraController : MonoBehaviour
     //카메라 사이즈 변경을 통한 줌인 줌아웃 구현 (참고: https://error37.tistory.com/3)
     public float ZoomSpeed = 1.0f; //한번에 줌 되는 정도
     public float MinZoomSize = 3.0f; //최소 카메라 사이즈
-    public float MaxZoomSize = 10.0f; //최대 카메라 사이즈
+    public float MaxZoomSize = 100.0f; //최대 카메라 사이즈
 
     private float targetZoomSize; //목표 카메라 크기
 
     //카메라 이동 구현 관련 변수 (참고: https://error37.tistory.com/2)
     public float DirectionForceReduceRate = 0.935f; //감속비율
     public float DirectionForceMin = 0.001f; //설정치 이하일 경우 움직임을 멈춤
-    public float MaxX = 150f; //카메라 최대 X값
-    public float MaxY = 150f; //카메라 최대 Y값
-    public float MinX = -150f; //카메라 최소 X값
-    public float MinY = -150f; //카메라 최소 Y값
+    public float MaxX = 5f; //카메라 최대 X값
+    public float MaxY = 5f; //카메라 최대 Y값
+    public float MinX = -5f; //카메라 최소 X값
+    public float MinY = -5f; //카메라 최소 Y값
     private bool _userMoveInput; //현재 마우스 클릭을 했냐 안했냐 판단
     private Vector3 _startPosition; //마우스 클릭 시작 위치를 기억
     private Vector3 _directionForce; //카메라 조작을 멈췄을때 서서히 감속하면서 이동
