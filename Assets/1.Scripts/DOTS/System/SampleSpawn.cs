@@ -39,7 +39,7 @@ namespace _1.Scripts.DOTS.System
                 {
                     index = new int2(x, y),
                     hp = 3,
-                    movementspeed = 5f,
+                    movementspeed = 0.2f,
                     dmg = 1,
                     team = newteam
                 });

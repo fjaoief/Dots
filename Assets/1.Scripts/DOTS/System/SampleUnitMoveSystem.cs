@@ -28,7 +28,7 @@ namespace _1.Scripts.DOTS.System
             MapMakerComponentData mapMaker = SystemAPI.GetSingleton<MapMakerComponentData>();
             //var ecbSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
             if(!MovingTagQuery.IsEmpty){
-                Debug.Log("Moving");
+                //Debug.Log("Moving");
                 new MovementJob
             {
                 Time = (float)SystemAPI.Time.DeltaTime,
