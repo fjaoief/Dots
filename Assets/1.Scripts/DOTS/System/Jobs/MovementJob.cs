@@ -5,7 +5,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using _1.Scripts.DOTS.Authoring_baker_;
 using Unity.Collections;
-using UnityEngine;
+//using UnityEngine;
 //using System.Diagnostics;
 
 
@@ -18,17 +18,17 @@ namespace _1.Scripts.DOTS.System.Jobs
          [ReadOnly] public MapMakerComponentData MapMaker;
         //public EntityCommandBuffer.ParallelWriter ECBWriter;
         // excute 쿼리에 moving tag 추가 예정
-        public void Execute(ref LocalTransform transform, EnabledRefRW<MovingTag> movingTag, SampleUnitComponentData sampleUnitComponentData)
+        public void Execute(ref LocalTransform transform, EnabledRefRW<MovingTag> movingTag, ref SampleUnitComponentData sampleUnitComponentData)
         {
             if (math.all(transform.Position == Int2tofloat3(sampleUnitComponentData.destIndex)*MapMaker.width))
             {
-                Debug.Log("Cancel Moving Tag of "+sampleUnitComponentData.index +sampleUnitComponentData.destIndex);
+               // Debug.Log("Cancel Moving Tag of "+sampleUnitComponentData.index +sampleUnitComponentData.destIndex);
                 sampleUnitComponentData.index = sampleUnitComponentData.destIndex;
                 movingTag.ValueRW = false;
             }
             else{
                 transform.Position = MoveTowards(transform.Position, Int2tofloat3(sampleUnitComponentData.destIndex)*MapMaker.width , Time*sampleUnitComponentData.movementspeed);
-                Debug.Log("Moving entity" + sampleUnitComponentData.index);
+                //Debug.Log("Moving entity" + sampleUnitComponentData.index);
                 // moving tag 취소
             }}
 
