@@ -693,7 +693,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11cf6db669d8b46409ae62111cea5011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-<<<<<<< HEAD
   ZoomSpeed: 1
   MinZoomSize: 3
   MaxZoomSize: 10
@@ -703,8 +702,6 @@ MonoBehaviour:
   MaxY: 5
   MinX: -5
   MinY: -5
-=======
->>>>>>> 0cbba12f6538bf0419269f6fb49ba1d08748f298
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
