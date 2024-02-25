@@ -1,28 +1,49 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class ToggleManager : MonoBehaviour
 {
-    public int variableValue = 0;
+    public int toggleValue = 0;
+    public List<Toggle> toggleButtons = new List<Toggle>();
 
-    public void OnToggleValueChanged(Toggle toggle, int value)
+    private void Start()
     {
-        if (toggle.isOn)
+        foreach (Toggle toggle in toggleButtons)
         {
-            variableValue = value;
-            UpdateToggles(value);
+            toggle.onValueChanged.AddListener(delegate { ToggleValueChanged(toggle); });
         }
     }
 
-    void UpdateToggles(int valueToExclude)
+    void ToggleValueChanged(Toggle changedToggle)
     {
-        Toggle[] toggles = GetComponentsInChildren<Toggle>();
-
-        foreach (Toggle toggle in toggles)
+        if (changedToggle.isOn)
         {
-            if (toggle.isOn && toggle.GetComponent<ToggleData>().value != valueToExclude)
+            toggleValue = toggleButtons.IndexOf(changedToggle) + 1;
+
+            foreach (Toggle toggle in toggleButtons)
             {
-                toggle.isOn = false;
+                if (toggle != changedToggle)
+                {
+                    toggle.isOn = false;
+                }
+            }
+        }
+        else
+        {
+            bool anyTogglesOn = false;
+            foreach (Toggle toggle in toggleButtons)
+            {
+                if (toggle.isOn)
+                {
+                    anyTogglesOn = true;
+                    break;
+                }
+            }
+
+            if (!anyTogglesOn)
+            {
+                toggleValue = 0;
             }
         }
     }
