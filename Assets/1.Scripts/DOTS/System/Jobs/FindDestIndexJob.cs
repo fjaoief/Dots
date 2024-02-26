@@ -41,21 +41,4 @@ namespace _1.Scripts.DOTS.System.Jobs
                 lazyTag.ValueRW = !lazyTag.ValueRW;
         }
     }
-
-    public struct SampleUnitIdexComp : IComparer<SampleUnitComponentData>
-    {
-        [ReadOnly] public int2 OriginIndex;
-
-        public readonly int Compare(SampleUnitComponentData a, SampleUnitComponentData b)
-        {
-            float distA = math.distancesq(OriginIndex, a.index);
-            float distB = math.distancesq(OriginIndex, b.index);
-            if (distA < distB)
-                return -1;
-            else if (distA > distB)
-                return 1;
-            else
-                return 0;
-        }
-    }
 }

@@ -14,7 +14,7 @@ namespace _1.Scripts.DOTS.System.Jobs
         [ReadOnly] public NativeArray<SampleUnitComponentData> SampleUnits;
         [ReadOnly] public MapMakerComponentData MapMaker;
 
-        public void Execute(ref SampleUnitComponentData sampleUnit, EnabledRefRW<AttackTag> attackTag)
+        public void Execute(ref SampleUnitComponentData sampleUnit, EnabledRefRW<AttackTag> attackTag, ref TargetComponentData target)
         {
             // 유닛들이 담긴 배열을 복사하고 복사한 배열 속 유닛들을 현재 유닛에서 가까운 순으로 정렬
             NativeArray<SampleUnitComponentData> sampleUnitsInOrder = new(SampleUnits.Length, Allocator.Temp);
@@ -25,6 +25,7 @@ namespace _1.Scripts.DOTS.System.Jobs
             for(int i=0; i<sampleUnitsInOrder.Length; i++){
                 if(sampleUnitsInOrder[i].team != sampleUnit.team){  
                     sampleUnit.targetIndex = new int2(sampleUnitsInOrder[i].index);
+                    target.targetComponent = sampleUnitsInOrder[i];
                     found = true;
                     break;
                 }
