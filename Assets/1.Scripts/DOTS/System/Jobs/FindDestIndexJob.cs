@@ -25,7 +25,6 @@ namespace _1.Scripts.DOTS.System.Jobs
             sampleUnit.destIndex = new int2(sampleUnit.index);
             for(int i=0; i<sampleUnitsInOrder.Length; i++){
                 if(sampleUnitsInOrder[i].team != sampleUnit.team){
-                    sampleUnit.destIndex = sampleUnitsInOrder[i].index;
                     int dx = (int)math.sign(sampleUnitsInOrder[i].index.x - sampleUnit.index.x);
                     int dy =  (int)math.sign(sampleUnitsInOrder[i].index.y - sampleUnit.index.y);
                     sampleUnit.destIndex += new int2(dx, dy);

@@ -37,8 +37,14 @@ namespace _1.Scripts.DOTS.System
             
             foreach (var tile in tiles)
             {
+                /*
                 ecb.SetComponentForLinkedEntityGroup(tile, queryMask, new MapTileAuthoringComponentData
                 {
+                    index = new int2(x, y),
+                    soldier = 0,
+                });
+                */
+                ecb.AddComponent(tile, new MapTileAuthoringComponentData{
                     index = new int2(x, y),
                     soldier = 0,
                 });
