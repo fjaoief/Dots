@@ -15,6 +15,8 @@ namespace _1.Scripts.DOTS.System
         EntityQuery behaviorTagQuery;
         EntityQuery unitQuery;
         EntityQuery tileQuery;
+        EntityQuery moveAttackTagQuery;
+        EntityQuery lazyTagQuery;
     
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -29,6 +31,8 @@ namespace _1.Scripts.DOTS.System
             behaviorTagQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<AttackTag, MovingTag, LazyTag>().Build(ref state);
             unitQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<SampleUnitComponentData>().Build(ref state);
             tileQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<MapTileAuthoringComponentData>().Build(ref state);
+            moveAttackTagQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<AttackTag, MovingTag>().Build(ref state);
+            lazyTagQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<LazyTag>().Build(ref state);
         }
 
         [BurstCompile]
@@ -39,7 +43,7 @@ namespace _1.Scripts.DOTS.System
             //Attack Tag, Moving Tag, Lazy Tag 중 하나라도 가진 엔티티가 없을 경우
             if(behaviorTagQuery.IsEmpty){
                 MapMakerComponentData mapMaker = SystemAPI.GetSingleton<MapMakerComponentData>();
-                Debug.Log("Find behavior");
+                //Debug.Log("Find behavior");
                 //타일 배열
                 //인덱스가 (3, 5)인 타일 = tiles[3 + 5 * mapMaker.number]
                 NativeArray<MapTileAuthoringComponentData> tiles = tileQuery.ToComponentDataArray<MapTileAuthoringComponentData>(Allocator.TempJob);
@@ -55,9 +59,47 @@ namespace _1.Scripts.DOTS.System
                 findDestIndexJob.ScheduleParallel();
                 state.Dependency.Complete();
                 sampleUnits.Dispose();
+
+                /*
+                //Attack을 하지 않은 유닛들이 순차적으로 이동
+                foreach(var (unit, movingTag, lazyTag) in SystemAPI.Query<RefRW<SampleUnitComponentData>, EnabledRefRW<MovingTag>, EnabledRefRW<LazyTag>>()
+                    .WithDisabled<AttackTag>().WithDisabled<LazyTag>().WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)){
+                    int dx = (int)math.sign(unit.ValueRO.targetIndex.x - unit.ValueRO.index.x);
+                    int dy = (int)math.sign(unit.ValueRO.targetIndex.y - unit.ValueRO.index.y);
+                    int2 unitIndex = unit.ValueRO.index;
+                    MapTileAuthoringComponentData currentTile = tiles[unitIndex.x + unitIndex.y * mapMaker.number];
+                    if(dx != 0){
+                        MapTileAuthoringComponentData nextTile = tiles[unitIndex.x + dx + unitIndex.y * mapMaker.number];
+                        if(nextTile.soldier == 0){
+                            unit.ValueRW.destIndex = unitIndex + new int2(dx, 0);
+                            currentTile.soldier = 0;
+                            tiles[unitIndex.x + unitIndex.y * mapMaker.number] = currentTile;
+                            nextTile.soldier = unit.ValueRO.team;
+                            tiles[nextTile.index.x + nextTile.index.y * mapMaker.number] = nextTile;
+                            movingTag.ValueRW = true;
+                            continue;
+                        }
+                    }
+                    if(dy!=0){
+                        MapTileAuthoringComponentData nextTile = tiles[unitIndex.x + (unitIndex.y + dy) * mapMaker.number];
+                        if(nextTile.soldier == 0){
+                            unit.ValueRW.destIndex = unitIndex + new int2(0, dy);
+                            currentTile.soldier = 0;
+                            tiles[unitIndex.x + unitIndex.y * mapMaker.number] = currentTile;
+                            nextTile.soldier = unit.ValueRO.team;
+                            tiles[nextTile.index.x + nextTile.index.y * mapMaker.number] = nextTile;
+                            movingTag.ValueRW = true;
+                            continue;
+                        }
+                    }
+                    lazyTag.ValueRW = !lazyTag.ValueRO;
+                }
+                tileQuery.CopyFromComponentDataArray(tiles);
+                */
+
                 tiles.Dispose();
             }
-            else{
+            else if (moveAttackTagQuery.IsEmpty && !lazyTagQuery.IsEmpty){
 
             }
 
@@ -89,9 +131,6 @@ namespace _1.Scripts.DOTS.System
                  x++;*/
              }
 //             x = 0;
-            
-             
-             
         }
 
         [BurstCompile]

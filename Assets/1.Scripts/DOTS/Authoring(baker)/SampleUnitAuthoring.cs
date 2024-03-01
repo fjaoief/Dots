@@ -37,4 +37,5 @@ public struct SampleUnitComponentData : IComponentData
     public int hp; 
     public int dmg;
     public int team;
+    public int2 targetIndex;
 }
