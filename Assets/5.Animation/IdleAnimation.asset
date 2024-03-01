@@ -12,12 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dc460e3eaeb97f48b48aa09fa988f09, type: 3}
   m_Name: IdleAnimation
   m_EditorClassIdentifier: 
-  SpriteSheet: {fileID: 0}
+  SpriteSheet: {fileID: 21300000, guid: b9b3fb22a39712d478104fa55620abf7, type: 3}
   FrameCount:
-    x: 1
+    x: 6
     y: 1
   FrameRange:
     Offset: 0
     Count: 0
   FrameDurations:
+  - 0.1
+  - 0.1
+  - 0.1
+  - 0.1
+  - 0.1
   - 0.1

@@ -12,4 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59540757d4006d444aaf5d4f510bc912, type: 3}
   m_Name: SampleUnitAnimationSet
   m_EditorClassIdentifier: 
-  _animations: []
+  _animations:
+  - name: SampleMoveAnimation
+    data: {fileID: 11400000, guid: 27492c4ea83e2c0488843d91acc616b6, type: 2}
+  - name: IdleAnimation
+    data: {fileID: 11400000, guid: 4c4310b24aa79c941a56a41a1958a70d, type: 2}
+  - name: AttackAnimation
+    data: {fileID: 11400000, guid: 18eeefb3724dcba4ea932dc0a22c2b7e, type: 2}
