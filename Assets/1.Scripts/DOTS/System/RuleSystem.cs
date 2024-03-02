@@ -52,12 +52,26 @@ namespace _1.Scripts.DOTS.System
                 //Debug.Log("FIND JOB START");
                 NativeArray<SampleUnitComponentData> sampleUnits = unitQuery.ToComponentDataArray<SampleUnitComponentData>(Allocator.TempJob);
 
-                FindDestIndexJob findDestIndexJob = new(){
+                FindNearestJob findNearestJob = new(){
                     MapMaker = mapMaker,
                     SampleUnits = sampleUnits,
                 };
-                findDestIndexJob.ScheduleParallel();
+
+                findNearestJob.ScheduleParallel();
                 state.Dependency.Complete();
+
+                foreach(var (unit, target) in SystemAPI.Query<RefRW<SampleUnitComponentData>, RefRW<TargetComponentData>>().WithAll<AttackTag>()){
+                    target.ValueRW.targetComponent.hp -= unit.ValueRW.dmg;
+                }
+                
+                EntityCommandBuffer ecb = new (Allocator.Temp);
+                foreach(var (unit, entity) in SystemAPI.Query<RefRW<SampleUnitComponentData>>().WithEntityAccess()){
+                    if (unit.ValueRW.hp <= 0){
+                        ecb.DestroyEntity(entity);
+                    }
+                }
+                ecb.Playback(state.EntityManager);
+
                 sampleUnits.Dispose();
 
                 /*
