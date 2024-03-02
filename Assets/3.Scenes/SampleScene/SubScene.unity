@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MapPrefab: {fileID: 8483260217440576703, guid: def60d172455c0a49882c91d61f6c785, type: 3}
   number: 100
-  width: 1
+  width: 100
 --- !u!4 &168814104
 Transform:
   m_ObjectHideFlags: 0
