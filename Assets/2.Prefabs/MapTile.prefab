@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5131365035658848330}
   - component: {fileID: -2131734243961126131}
-  - component: {fileID: -527324859897586523}
+  - component: {fileID: 3446188984383337187}
+  - component: {fileID: -6444081671393416434}
   m_Layer: 0
   m_Name: MapTile
   m_TagString: Untagged
@@ -74,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: e7d9a5a5faba2194dacc7eb9ed86b559, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -85,7 +86,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-527324859897586523
+--- !u!210 &3446188984383337187
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8483260217440576703}
+  m_Enabled: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 1
+--- !u!114 &-6444081671393416434
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,15 +107,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 8483260217440576703}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b69774b53a53ba948b59b4d73ac17c8c, type: 3}
+  m_Script: {fileID: 11500000, guid: be769d94253e895418ce7434194ba34e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Sprite: {fileID: 21300000, guid: e7d9a5a5faba2194dacc7eb9ed86b559, type: 3}
+  AnimationAuthoringModule:
+    AnimationSet: {fileID: 11400000, guid: d3a2a7a390f2ecb47b6e6e45118bd232, type: 2}
+    InitialAnimationIndex: 0
   RegisterSpriteData:
     SpriteRenderData:
       Material: {fileID: 2100000, guid: d84d30a8fe326be4f98378dcb774dabf, type: 2}
       PropertiesSet: {fileID: 11400000, guid: 99d3374c56bc41b408704563b4c0e25e, type: 2}
-  OverrideTextureFromSprite: 1
   RenderSettings:
     Pivot:
       x: 0.5
@@ -123,4 +137,4 @@ MonoBehaviour:
   Sorting:
     StaticSorting: 0
     SortingIndex: 0
-    SortingLayer: -633184467
+    SortingLayer: 0

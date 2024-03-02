@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 59540757d4006d444aaf5d4f510bc912, type: 3}
-  m_Name: SampleUnitAnimationSet
+  m_Name: Tile
   m_EditorClassIdentifier: 
   _animations:
-  - name: Attack
-    data: {fileID: 11400000, guid: 18eeefb3724dcba4ea932dc0a22c2b7e, type: 2}
+  - name: 1
+    data: {fileID: 11400000, guid: 5086401883116fc4781a283aa7ba3420, type: 2}
