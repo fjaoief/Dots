@@ -20,4 +20,4 @@ MonoBehaviour:
     Offset: 0
     Count: 0
   FrameDurations:
-  - 1e+14
+  - 999999
