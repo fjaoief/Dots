@@ -14,7 +14,8 @@ namespace _1.Scripts.DOTS.System
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<SampleSpawnData>();
-            
+            state.RequireForUpdate<MapTileAuthoringComponentData>();
+            state.RequireForUpdate<MapMakerComponentData>();
         }
 
         [BurstCompile]
@@ -33,6 +34,11 @@ namespace _1.Scripts.DOTS.System
             int x = 0;
             int y = 0;
             int newteam = 0;
+
+            MapMakerComponentData mapMaker = SystemAPI.GetSingleton<MapMakerComponentData>();
+            var tileQuery = SystemAPI.QueryBuilder().WithAll<MapTileAuthoringComponentData>().Build();
+            NativeArray<MapTileAuthoringComponentData> tiles = tileQuery.ToComponentDataArray<MapTileAuthoringComponentData>(Allocator.Temp);
+            
             foreach (var SampleUnit in SampleUnits)
             {
                 ecb.SetComponentForLinkedEntityGroup(SampleUnit, queryMask, new SampleUnitComponentData
@@ -52,6 +58,12 @@ namespace _1.Scripts.DOTS.System
                     Position = new float3 (x, y, 0),
                     Scale = 5
                 });
+                
+                //새로 생성한 유닛 타일 점거
+                MapTileAuthoringComponentData currentTile= tiles[x + mapMaker.number * y];
+                currentTile.soldier = 1;
+                tiles[x + mapMaker.number * y] = currentTile;
+
                 if (x != 100)
                 {
                     x++;
@@ -67,7 +79,7 @@ namespace _1.Scripts.DOTS.System
                 
             }
             ecb.Playback(state.EntityManager);
-
+            tileQuery.CopyFromComponentDataArray(tiles);
         }
 
         [BurstCompile]

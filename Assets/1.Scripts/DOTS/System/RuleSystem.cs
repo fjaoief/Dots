@@ -7,6 +7,7 @@ using UnityEngine;
 using Unity.Mathematics;
 using Unity.Transforms;
 using _1.Scripts.DOTS.Components___Tags;
+using Unity.VisualScripting;
 
 namespace _1.Scripts.DOTS.System
 {
@@ -15,9 +16,9 @@ namespace _1.Scripts.DOTS.System
         EntityQuery behaviorTagQuery;
         EntityQuery unitQuery;
         EntityQuery tileQuery;
-        EntityQuery moveAttackTagQuery;
-        EntityQuery lazyTagQuery;
-    
+
+        ComponentLookup<SampleUnitComponentData> sampleUnitLookup;
+
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -31,14 +32,14 @@ namespace _1.Scripts.DOTS.System
             behaviorTagQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<AttackTag, MovingTag, LazyTag>().Build(ref state);
             unitQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<SampleUnitComponentData>().Build(ref state);
             tileQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<MapTileAuthoringComponentData>().Build(ref state);
-            moveAttackTagQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<AttackTag, MovingTag>().Build(ref state);
-            lazyTagQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<LazyTag>().Build(ref state);
+            sampleUnitLookup = state.GetComponentLookup<SampleUnitComponentData>(true);
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
             var dt = SystemAPI.Time.DeltaTime;
+            sampleUnitLookup.Update(ref state);
 
             //Attack Tag, Moving Tag, Lazy Tag 중 하나라도 가진 엔티티가 없을 경우
             if(behaviorTagQuery.IsEmpty){
@@ -50,101 +51,85 @@ namespace _1.Scripts.DOTS.System
 
                 //행동을 결정해야 함(공격할 타겟 찾기 or 이동할 위치 찾기)
                 //Debug.Log("FIND JOB START");
-                NativeArray<SampleUnitComponentData> sampleUnits = unitQuery.ToComponentDataArray<SampleUnitComponentData>(Allocator.TempJob);
+                NativeArray<Entity> sampleUnits = unitQuery.ToEntityArray(Allocator.TempJob);
 
                 FindNearestJob findNearestJob = new(){
                     MapMaker = mapMaker,
                     SampleUnits = sampleUnits,
+                    SampleUnitComponents = sampleUnitLookup,
                 };
 
                 findNearestJob.ScheduleParallel();
                 state.Dependency.Complete();
 
-                foreach(var (unit, target) in SystemAPI.Query<RefRW<SampleUnitComponentData>, RefRW<TargetComponentData>>().WithAll<AttackTag>()){
-                    target.ValueRW.targetComponent.hp -= unit.ValueRW.dmg;
+                //체력 감소
+                foreach(var (unit, target) in SystemAPI.Query<RefRO<SampleUnitComponentData>, RefRW<TargetEntityData>>().WithAll<AttackTag>()){
+                    SystemAPI.GetComponentRW<SampleUnitComponentData>(target.ValueRW.targetEntity).ValueRW.hp -= unit.ValueRO.dmg;
                 }
                 
+                //체력 0인 유닛 파괴
                 EntityCommandBuffer ecb = new (Allocator.Temp);
                 foreach(var (unit, entity) in SystemAPI.Query<RefRW<SampleUnitComponentData>>().WithEntityAccess()){
                     if (unit.ValueRW.hp <= 0){
+                        MapTileAuthoringComponentData tile =  tiles[unit.ValueRO.index.x + unit.ValueRO.index.y * mapMaker.number];
+                        tile.soldier = 0;
+                        tiles[unit.ValueRO.index.x + unit.ValueRO.index.y * mapMaker.number] = tile;
                         ecb.DestroyEntity(entity);
                     }
                 }
                 ecb.Playback(state.EntityManager);
-
                 sampleUnits.Dispose();
-
-                /*
+                
                 //Attack을 하지 않은 유닛들이 순차적으로 이동
-                foreach(var (unit, movingTag, lazyTag) in SystemAPI.Query<RefRW<SampleUnitComponentData>, EnabledRefRW<MovingTag>, EnabledRefRW<LazyTag>>()
-                    .WithDisabled<AttackTag>().WithDisabled<LazyTag>().WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)){
-                    int dx = (int)math.sign(unit.ValueRO.targetIndex.x - unit.ValueRO.index.x);
-                    int dy = (int)math.sign(unit.ValueRO.targetIndex.y - unit.ValueRO.index.y);
-                    int2 unitIndex = unit.ValueRO.index;
-                    MapTileAuthoringComponentData currentTile = tiles[unitIndex.x + unitIndex.y * mapMaker.number];
-                    if(dx != 0){
-                        MapTileAuthoringComponentData nextTile = tiles[unitIndex.x + dx + unitIndex.y * mapMaker.number];
-                        if(nextTile.soldier == 0){
-                            unit.ValueRW.destIndex = unitIndex + new int2(dx, 0);
-                            currentTile.soldier = 0;
-                            tiles[unitIndex.x + unitIndex.y * mapMaker.number] = currentTile;
-                            nextTile.soldier = unit.ValueRO.team;
-                            tiles[nextTile.index.x + nextTile.index.y * mapMaker.number] = nextTile;
-                            movingTag.ValueRW = true;
-                            continue;
+                for(int i=0; i<2; i++){
+                    foreach(var (unit, target, movingTag, lazyTag) in SystemAPI.Query<RefRW<SampleUnitComponentData>, RefRO<TargetEntityData>, EnabledRefRW<MovingTag>, EnabledRefRW<LazyTag>>()
+                        .WithDisabled<AttackTag>().WithDisabled<MovingTag>().WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)){
+                        if(!state.EntityManager.Exists(target.ValueRO.targetEntity)
+                            ||!SystemAPI.HasComponent<SampleUnitComponentData>(target.ValueRO.targetEntity)) continue;
+                        int2 targetIndex = SystemAPI.GetComponentRO<SampleUnitComponentData>(target.ValueRO.targetEntity).ValueRO.index;
+                        int dx = (int)math.sign(targetIndex.x - unit.ValueRO.index.x);
+                        int dy = (int)math.sign(targetIndex.y - unit.ValueRO.index.y);
+                        int2 unitIndex = unit.ValueRO.index;
+                        MapTileAuthoringComponentData currentTile = tiles[unitIndex.x + unitIndex.y * mapMaker.number];
+                        if(dx != 0){
+                            MapTileAuthoringComponentData nextTile = tiles[unitIndex.x + dx + unitIndex.y * mapMaker.number];
+                            if(nextTile.soldier == 0){
+                                unit.ValueRW.destIndex = unitIndex + new int2(dx, 0);
+                                currentTile.soldier = 0;
+                                tiles[unitIndex.x + unitIndex.y * mapMaker.number] = currentTile;
+                                nextTile.soldier = 1;
+                                tiles[nextTile.index.x + nextTile.index.y * mapMaker.number] = nextTile;
+                                lazyTag.ValueRW = false;
+                                movingTag.ValueRW = true;
+                                continue;
+                            }
                         }
-                    }
-                    if(dy!=0){
-                        MapTileAuthoringComponentData nextTile = tiles[unitIndex.x + (unitIndex.y + dy) * mapMaker.number];
-                        if(nextTile.soldier == 0){
-                            unit.ValueRW.destIndex = unitIndex + new int2(0, dy);
-                            currentTile.soldier = 0;
-                            tiles[unitIndex.x + unitIndex.y * mapMaker.number] = currentTile;
-                            nextTile.soldier = unit.ValueRO.team;
-                            tiles[nextTile.index.x + nextTile.index.y * mapMaker.number] = nextTile;
-                            movingTag.ValueRW = true;
-                            continue;
+                        if(dy != 0){
+                            MapTileAuthoringComponentData nextTile = tiles[unitIndex.x + (unitIndex.y + dy) * mapMaker.number];
+                            if(nextTile.soldier == 0){
+                                unit.ValueRW.destIndex = unitIndex + new int2(0, dy);
+                                currentTile.soldier = 0;
+                                tiles[unitIndex.x + unitIndex.y * mapMaker.number] = currentTile;
+                                nextTile.soldier = 1;
+                                tiles[nextTile.index.x + nextTile.index.y * mapMaker.number] = nextTile;
+                                lazyTag.ValueRW = false;
+                                movingTag.ValueRW = true;
+                                continue;
+                            }
                         }
+                        if (i == 0) lazyTag.ValueRW = true;
+                        else lazyTag.ValueRW = false;
                     }
-                    lazyTag.ValueRW = !lazyTag.ValueRO;
                 }
+
                 tileQuery.CopyFromComponentDataArray(tiles);
-                */
-
                 tiles.Dispose();
-            }
-            else if (moveAttackTagQuery.IsEmpty && !lazyTagQuery.IsEmpty){
 
+                //테스트용(현재 Attack Tag를 제거하는 로직이 따로 없기 때문에 여기서 바로 제거)
+                foreach(var attackTag in SystemAPI.Query<EnabledRefRW<AttackTag>>()){
+                    attackTag.ValueRW = false;
+                }
             }
-
-  //          int x = 0;
-            // foreach (var (transform, sampleUnit) in SystemAPI.Query<RefRW<LocalTransform>,RefRW<SampleUnitComponentData>>())
-             {
-                 //각 엔티티의 길찾기 알고리즘은 여기에
-                 //가장 가까운 적을 찾고 가까워지기 위한 빈칸을 목적 타일로 설정
-                 //해당 칸으로 이동(인덱스 변경, 타일 공백 여부 변경)
-                 //인덱스를 통해 주변 타일의 공백 여부 계산
-                 
-                 /*var index = sampleUnit.ValueRW.index;
-                 if(transform.ValueRW.Position.y < 2)
-                 {
-                 transform.ValueRW.Position.y += dt * (float)0.1;
-                 }*/
-                 
-                 //이동. 나중에 job으로 실행하는 것으로 변경해야 함
-                 
-                 
-                 /*
-                  * 공격+피격
-                  */
-                 
-                 
-                 
-                 /* 순서 설정용 코드
-                sampleUnit.ValueRW.order = x;
-                 x++;*/
-             }
-//             x = 0;
         }
 
         [BurstCompile]

@@ -1,3 +1,4 @@
+/*
 using Unity.Entities;
 using Unity.Burst;
 using Unity.Collections;
@@ -45,3 +46,4 @@ namespace _1.Scripts.DOTS.System.Jobs
         }
     }
 }
+*/
