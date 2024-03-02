@@ -24,7 +24,7 @@ public class SampleUnitAuthoring : MonoBehaviour
             AddComponent(entity,new MovingTag());
             AddComponent(entity, new AttackTag());
             AddComponent(entity, new LazyTag());
-            AddComponent(entity, new TargetComponentData());
+            AddComponent(entity, new TargetEntityData());
         }
     }
 }
@@ -38,10 +38,9 @@ public struct SampleUnitComponentData : IComponentData
     public int hp; 
     public int dmg;
     public int team;
-    public int2 targetIndex;
 }
 
-public struct TargetComponentData : IComponentData
+public struct TargetEntityData : IComponentData
 {
-    public SampleUnitComponentData targetComponent;
+    public Entity targetEntity;
 }

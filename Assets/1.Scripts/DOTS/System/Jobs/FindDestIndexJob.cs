@@ -1,3 +1,4 @@
+/*
 using Unity.Entities;
 using Unity.Burst;
 using Unity.Collections;
@@ -6,12 +7,15 @@ using Unity.Mathematics;
 using System.Collections.Generic;
 using _1.Scripts.DOTS.Components___Tags;
 
+
+
 namespace _1.Scripts.DOTS.System.Jobs
 {
     [BurstCompile]
     [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
     public partial struct FindDestIndexJob : IJobEntity
     {
+        
         [ReadOnly] public NativeArray<SampleUnitComponentData> SampleUnits;
         [ReadOnly] public MapMakerComponentData MapMaker;
 
@@ -42,3 +46,4 @@ namespace _1.Scripts.DOTS.System.Jobs
         }
     }
 }
+*/
