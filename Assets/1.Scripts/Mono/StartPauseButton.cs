@@ -23,10 +23,12 @@ public class StartPauseButton : MonoBehaviour
         if (_entityManager.IsComponentEnabled<StartPause>(_spawnerEntity))
         {
             _entityManager.SetComponentEnabled<StartPause>(_spawnerEntity, false);
+            Debug.Log(_entityManager.IsComponentEnabled<StartPause>(_spawnerEntity));
         }
         else
         {
             _entityManager.SetComponentEnabled<StartPause>(_spawnerEntity, true);
+            Debug.Log(_entityManager.IsComponentEnabled<StartPause>(_spawnerEntity));
         }
     }
 }

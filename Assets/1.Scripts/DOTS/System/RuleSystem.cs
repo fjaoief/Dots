@@ -49,15 +49,16 @@ namespace _1.Scripts.DOTS.System
             sampleUnitLookup.Update(ref state);
             startLookup.Update(ref state);
 
-            //spawnerEntity = SystemAPI.GetSingletonEntity<StartPause>();
+            //spawnerEntity = state.EntityManager.CreateEntityQuery(new EntityQueryBuilder(Allocator.Temp).WithAll<StartPause>()).GetSingletonEntity();
 
+            // Debug.Log(spawnerQuery.CalculateEntityCount());
             // NativeArray<Entity> spawner = spawnerQuery.ToEntityArray(Allocator.TempJob);
             // spawnerEntity = spawner[0];
 
-            // if (!startLookup.IsComponentEnabled(spawnerEntity))
-            // {
-            //     return;
-            // }
+            if (spawnerQuery.CalculateEntityCount() == 0)
+            {
+                return;
+            }
 
 
 
