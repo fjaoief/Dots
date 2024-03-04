@@ -34,7 +34,7 @@ public class ClickSpawn : MonoBehaviour
             mousePosition = MainCamera.ScreenToWorldPoint(Input.mousePosition + new Vector3(0, 0, 10f));
 
             _targetEntity = SelectEntity(mousePosition);
-            Debug.Log($"{_targetEntity.ToString()}");
+            //Debug.Log($"{_targetEntity.ToString()}");
         }
 
         if (_targetEntity == Entity.Null)
@@ -103,7 +103,7 @@ public class ClickSpawn : MonoBehaviour
     {
         //if (MainCamera.Instance == null) return Entity.Null;
         //var mainCam = MainCamera.Instance.Camera;
-        Debug.Log(mousePosition);
+        //Debug.Log(mousePosition);
         // var ray = MainCamera.ScreenToWorldPoint(mousePosition);//var ray = MainCamera.ScreenPointToRay(mousePosition);
         //Debug.Log($"{ray.ToString()}");
         Entity closestTile = Entity.Null;
@@ -130,7 +130,7 @@ public class ClickSpawn : MonoBehaviour
             var dist = (mousePosition - (Vector3)entityPos).sqrMagnitude;
             if (dist < minSqrDist)
             {
-                Debug.Log(entity);
+                //Debug.Log(entity);
                 closestTile = entity;
                 break;
             }

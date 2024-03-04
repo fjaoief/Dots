@@ -23,7 +23,7 @@ namespace _1.Scripts.DOTS.Authoring_baker_
                 {
                     ToggleValue = authoring.ToggleValue
                 });
-                AddComponent(entity, new Start()
+                AddComponent(entity, new StartPause()
                 {
                     startFlag = authoring.startFlag
                 });
@@ -43,7 +43,7 @@ namespace _1.Scripts.DOTS.Authoring_baker_
         public int ToggleValue; // 어떤 유닛을 스폰할지 판단하는 변수
     }
 
-    public struct Start : IComponentData
+    public struct StartPause : IComponentData, IEnableableComponent
     {
         public int startFlag;
     }
