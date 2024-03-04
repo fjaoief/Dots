@@ -12,6 +12,7 @@ namespace _1.Scripts.DOTS.System
     {
         EntityQuery MovingTagQuery;
         EntityQuery unitQuery;
+        EntityQuery spawnerQuery;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -19,7 +20,7 @@ namespace _1.Scripts.DOTS.System
             //
             state.RequireForUpdate<MapMakerComponentData>();
             MovingTagQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<MovingTag>().Build(ref state);
-
+            spawnerQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<StartPause>().Build(ref state);
         }
 
         [BurstCompile]
@@ -27,17 +28,24 @@ namespace _1.Scripts.DOTS.System
         {
             MapMakerComponentData mapMaker = SystemAPI.GetSingleton<MapMakerComponentData>();
             //var ecbSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
-            if(!MovingTagQuery.IsEmpty){
+
+            if (spawnerQuery.CalculateEntityCount() == 0)
+            {
+                return;
+            }
+
+            if (!MovingTagQuery.IsEmpty)
+            {
                 //Debug.Log("Moving");
                 new MovementJob
-            {
-                Time = (float)SystemAPI.Time.DeltaTime,
-                MapMaker = mapMaker
-                //ECBWriter = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter()
-            }.ScheduleParallel();
-            state.Dependency.Complete();
+                {
+                    Time = (float)SystemAPI.Time.DeltaTime,
+                    MapMaker = mapMaker
+                    //ECBWriter = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter()
+                }.ScheduleParallel();
+                state.Dependency.Complete();
             }
-            
+
         }
 
         [BurstCompile]
