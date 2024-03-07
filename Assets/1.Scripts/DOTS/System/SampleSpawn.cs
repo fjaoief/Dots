@@ -22,7 +22,6 @@ namespace _1.Scripts.DOTS.System
         public void OnUpdate(ref SystemState state)
         {
             state.Enabled = false;
-            
             var SampleSpawner = SystemAPI.GetSingleton<SampleSpawnData>();
             
             var ecb = new EntityCommandBuffer(Allocator.Temp);
@@ -38,7 +37,7 @@ namespace _1.Scripts.DOTS.System
             MapMakerComponentData mapMaker = SystemAPI.GetSingleton<MapMakerComponentData>();
             var tileQuery = SystemAPI.QueryBuilder().WithAll<MapTileAuthoringComponentData>().Build();
             NativeArray<MapTileAuthoringComponentData> tiles = tileQuery.ToComponentDataArray<MapTileAuthoringComponentData>(Allocator.Temp);
-            
+
             foreach (var SampleUnit in SampleUnits)
             {
                 ecb.SetComponentForLinkedEntityGroup(SampleUnit, queryMask, new SampleUnitComponentData
@@ -60,11 +59,11 @@ namespace _1.Scripts.DOTS.System
                 });
                 
                 //새로 생성한 유닛 타일 점거
-                MapTileAuthoringComponentData currentTile= tiles[x + mapMaker.number * y];
+                MapTileAuthoringComponentData currentTile = tiles[x + mapMaker.number * y];
                 currentTile.soldier = 1;
                 tiles[x + mapMaker.number * y] = currentTile;
 
-                if (x != 100)
+                if (x < mapMaker.number - 1)
                 {
                     x++;
                 }
@@ -73,7 +72,7 @@ namespace _1.Scripts.DOTS.System
                     x = 0;
                     y++;
                 }
-                if(x>50){
+                if(x>=50){
                     newteam = 1;
                 }
                 

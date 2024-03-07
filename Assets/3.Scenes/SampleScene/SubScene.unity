@@ -152,7 +152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c3a4aaf9f834113bbe321c1198dda6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapPrefab: {fileID: 8483260217440576703, guid: def60d172455c0a49882c91d61f6c785, type: 3}
+  MapTilePrefab: {fileID: 8483260217440576703, guid: def60d172455c0a49882c91d61f6c785, type: 3}
+  SpriteTilePrefab: {fileID: 8483260217440576703, guid: 39fe4906591059f4fad6b56fbfdcc28b, type: 3}
   number: 100
   width: 1
 --- !u!4 &168814104

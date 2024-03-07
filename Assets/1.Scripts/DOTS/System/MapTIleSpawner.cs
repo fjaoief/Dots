@@ -20,41 +20,33 @@ namespace _1.Scripts.DOTS.System
         {
             //1번만 돌아야 해서
             state.Enabled = false;
-
             var MapMaker = SystemAPI.GetSingleton<MapMakerComponentData>();
 
             // 타일 생성
             var ecb = new EntityCommandBuffer(Allocator.Temp);
             var tiles = new NativeArray<Entity>(MapMaker.number*MapMaker.number, Allocator.Temp);
-            ecb.Instantiate(MapMaker.MapPrefab, tiles);
-            
+            var spriteTiles = new NativeArray<Entity>(MapMaker.number * MapMaker.number, Allocator.Temp);
+            ecb.Instantiate(MapMaker.MapTilePrefab, tiles);
+            ecb.Instantiate(MapMaker.SpriteTilePrefab, spriteTiles);
+
             // 타일 정렬
-            var query = SystemAPI.QueryBuilder().WithAll<MapTileAuthoringComponentData>().WithAll<LocalTransform>().Build();
-            var queryMask = query.GetEntityQueryMask();
             int x = 0;
             int y = 0;
-            
-            
-            foreach (var tile in tiles)
+
+            for (int i = 0; i < tiles.Length; i++)
             {
-                /*
-                ecb.SetComponentForLinkedEntityGroup(tile, queryMask, new MapTileAuthoringComponentData
-                {
+                ecb.AddComponent(tiles[i], new MapTileAuthoringComponentData{
                     index = new int2(x, y),
                     soldier = 0,
-                });
-                */
-                ecb.AddComponent(tile, new MapTileAuthoringComponentData{
-                    index = new int2(x, y),
-                    soldier = 0,
-                });
-                ecb.SetComponent(tile, new LocalTransform()
-                {
-                    Position = new float3 (x*MapMaker.width, y*MapMaker.width, 0),
-                    Scale = 1
                 });
                 
-                if (x != MapMaker.number-1)
+                ecb.SetComponent(spriteTiles[i], new LocalTransform()
+                {
+                    Position = new float3(x * MapMaker.width, y * MapMaker.width, 0),
+                    Scale = 1
+                });
+
+                if (x != MapMaker.number - 1)
                 {
                     x++;
                 }
@@ -63,14 +55,11 @@ namespace _1.Scripts.DOTS.System
                     x = 0;
                     y++;
                 }
-                
+
             }
-            
-            
-            
+
             ecb.Playback(state.EntityManager);
-            
-            
+
         }
 
         [BurstCompile]
