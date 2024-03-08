@@ -4,7 +4,6 @@ using _1.Scripts.DOTS.System.Jobs;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using UnityEngine;
 
 namespace _1.Scripts.DOTS.System
 {

@@ -1,13 +1,14 @@
+using _1.Scripts.DOTS.Components___Tags;
 using Unity.Entities;
 using UnityEngine;
 
-namespace NSprites
+namespace _1.Scripts.DOTS.Authoring_baker_
 {
-    public class AnimatorAuthoring : MonoBehaviour
+    public class AnimationSettingsAuthoring : MonoBehaviour
     {
-        private class AnimationSettingsBaker : Baker<AnimatorAuthoring>
+        private class AnimationSettingsBaker : Baker<AnimationSettingsAuthoring>
         {
-            public override void Bake(AnimatorAuthoring authoring)
+            public override void Bake(AnimationSettingsAuthoring authoring)
             {
                 AddComponent(GetEntity(TransformUsageFlags.None), new AnimationSettings
                 {

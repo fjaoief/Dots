@@ -1,6 +1,6 @@
-using Unity.Entities;
+﻿using Unity.Entities;
 
-namespace NSprites
+namespace _1.Scripts.DOTS.Components___Tags
 {
     public struct AnimationSettings : IComponentData
     {
