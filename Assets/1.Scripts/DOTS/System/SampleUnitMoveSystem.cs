@@ -29,6 +29,7 @@ namespace _1.Scripts.DOTS.System
             MapMakerComponentData mapMaker = SystemAPI.GetSingleton<MapMakerComponentData>();
             //var ecbSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
 
+            // EntityQuery는 비활성화된 EnableableComponent를 Querying하지 않음
             if (spawnerQuery.CalculateEntityCount() == 0)
             {
                 return;

@@ -55,6 +55,7 @@ namespace _1.Scripts.DOTS.System
             // NativeArray<Entity> spawner = spawnerQuery.ToEntityArray(Allocator.TempJob);
             // spawnerEntity = spawner[0];
 
+            // EntityQuery는 비활성화된 EnableableComponent를 Querying하지 않음
             if (spawnerQuery.CalculateEntityCount() == 0)
             {
                 return;
