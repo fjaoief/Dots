@@ -13,12 +13,12 @@ public class ClickSpawn : MonoBehaviour
     public float distance = 0.1f;
 
     private Entity _targetEntity;
-    private Camera MainCamera;
+    private Camera MainCamera; //마우스 클릭한 위치를 알아내기 위해 메인 카메라 호출
     private EntityManager _entityManager;
-    private Entity _spawnerEntity;
+    private Entity _spawnerEntity; //소환할 유닛 엔티티 프리팹 정보가 스포너 엔티티의 SampleSpawnData 컴포넌트에 있기 때문에 불러옴
     private Entity _sampleUnitEntity;
     private int _spawnNum;
-    // private int _toggleValue;
+    // private int _toggleValue; //추후 여러가지 유닛 소환 기능을 구현할때 사용할 변수
 
     private void Awake()
     {
@@ -34,7 +34,7 @@ public class ClickSpawn : MonoBehaviour
             mousePosition = MainCamera.ScreenToWorldPoint(Input.mousePosition + new Vector3(0, 0, 10f));
 
             _targetEntity = SelectEntity(mousePosition);
-            //Debug.Log($"{_targetEntity.ToString()}");
+            //Debug.Log($"{_targetEntity.ToString()}"); //디버깅을 위한 코드
         }
 
         if (_targetEntity == Entity.Null)
@@ -47,7 +47,7 @@ public class ClickSpawn : MonoBehaviour
         _spawnNum = _entityManager.GetComponentData<SampleSpawnData>(_spawnerEntity).number;
         //_toggleValue = _entityManager.GetComponentData<WhattoSpawn>(_spawnerEntity).ToggleValue;
 
-        /*
+        /* // 체크박스 체크 / 해제 작동 여부를 확인하기 위한 구문
         if (_toggleValue == 0)
         {
             return;
@@ -101,28 +101,12 @@ public class ClickSpawn : MonoBehaviour
 
     private Entity SelectEntity(Vector3 mousePosition)
     {
-        //if (MainCamera.Instance == null) return Entity.Null;
-        //var mainCam = MainCamera.Instance.Camera;
-        //Debug.Log(mousePosition);
-        // var ray = MainCamera.ScreenToWorldPoint(mousePosition);//var ray = MainCamera.ScreenPointToRay(mousePosition);
-        //Debug.Log($"{ray.ToString()}");
-        Entity closestTile = Entity.Null;
+        Entity closestTile = Entity.Null; //return할 타일 엔티티 변수 선언
 
-        // RaycastHit2D hit = Physics2D.Raycast(ray, transform.forward, 50f);
-        // Debug.DrawRay(mousePosition, transform.forward * 10, Color.red, 0.3f);
-        // if (!hit)
-        // {
-        //     Debug.Log("분기 발동");
-        //     return Entity.Null;
-        // }
-        // else
-        //     Debug.Log("정상 클릭");
+        var query = _entityManager.CreateEntityQuery(typeof(MapTileAuthoringComponentData)); //맵 타일 엔티티 쿼링
 
-
-        var query = _entityManager.CreateEntityQuery(typeof(MapTileAuthoringComponentData));
-
-        var minSqrDist = distance * distance;
-        foreach (var entity in query.ToEntityArray(Allocator.Temp))
+        var minSqrDist = distance * distance; //거리 계산을 위해 미리 제곱해주기
+        foreach (var entity in query.ToEntityArray(Allocator.Temp)) // 월드에 존재하는 모든 맵 타일 Entity를 가져와 전수조사
         {
 
             var entityPos = _entityManager.GetComponentData<LocalTransform>(entity).Position;
