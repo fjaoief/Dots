@@ -91,99 +91,100 @@ public class ClickSpawn : MonoBehaviour
                 }
             }
         }
-
-        private Entity SelectEntity(Vector3 mousePosition)
-        {
-            Entity closestTile = Entity.Null; //return할 타일 엔티티 변수 선언
-
-            var query = _entityManager.CreateEntityQuery(typeof(MapTileAuthoringComponentData)); //맵 타일 엔티티 쿼링
-
-            var minSqrDist = distance * distance; //거리 계산을 위해 미리 제곱해주기
-            foreach (var entity in query.ToEntityArray(Allocator.Temp)) // 월드에 존재하는 모든 맵 타일 Entity를 가져와 전수조사
-            {
-
-                var entityPos = _entityManager.GetComponentData<MapTileAuthoringComponentData>(entity).index;
-
-                var dist = (mousePosition - new Vector3(entityPos.x, entityPos.y, mousePosition.z)).sqrMagnitude;
-                if (dist < minSqrDist)
-                {
-                    //Debug.Log(entity);
-                    closestTile = entity;
-                    break;
-                }
-            }
-
-            return closestTile;
-        }
-
-        private void Spawn()
-        {
-            MapTileAuthoringComponentData clickedTile = _entityManager.GetComponentData<MapTileAuthoringComponentData>(_targetEntity);
-            if (clickedTile.soldier != 0) return;
-            MapMakerComponentData mapMaker = _entityManager.CreateEntityQuery(typeof(MapMakerComponentData)).GetSingleton<MapMakerComponentData>();
-
-            _spawnerEntity = _entityManager.CreateEntityQuery(typeof(SampleSpawnData)).GetSingletonEntity();
-            _sampleUnitEntity = _entityManager.GetComponentData<SampleSpawnData>(_spawnerEntity).SampleEntityPrefab;
-            _spawnNum = _entityManager.GetComponentData<SampleSpawnData>(_spawnerEntity).number;
-            //_toggleValue = _entityManager.GetComponentData<WhattoSpawn>(_spawnerEntity).ToggleValue;
-
-            /*
-            if (_toggleValue == 0)
-            {
-                return;
-            }
-            */
-
-            var SampleUnits = new NativeArray<Entity>(_spawnNum, Allocator.Temp);
-            var ecb = new EntityCommandBuffer(Allocator.Temp);
-            ecb.Instantiate(_sampleUnitEntity, SampleUnits);
-            var tileQuery = _entityManager.CreateEntityQuery(typeof(MapTileAuthoringComponentData));
-            var tiles = tileQuery.ToEntityArray(Allocator.Temp);
-
-            int x = 0;
-            int y = clickedTile.index.y;
-            int newteam = 0;
-            foreach (var SampleUnit in SampleUnits)
-            {
-                MapTileAuthoringComponentData currentTile = _entityManager.GetComponentData<MapTileAuthoringComponentData>(tiles[x + y * mapMaker.number]);
-                if (currentTile.soldier == 0)
-                {
-                    ecb.SetComponent(SampleUnit, new SampleUnitComponentData
-                    {
-                        index = new int2(x, y),
-                        hp = 3,
-                        movementspeed = 0.2f,
-                        dmg = 1,
-                        team = newteam
-                    });
-                    ecb.SetComponentEnabled<MovingTag>(SampleUnit, false);
-                    ecb.SetComponentEnabled<AttackTag>(SampleUnit, false);
-                    ecb.SetComponentEnabled<LazyTag>(SampleUnit, false);
-
-                    ecb.SetComponent(SampleUnit, new LocalTransform()
-                    {
-                        Position = new float3(x, y, 0),
-                        Scale = 5
-                    });
-
-                    currentTile.soldier = 1;
-                    _entityManager.SetComponentData(tiles[x + y * mapMaker.number], currentTile);
-                }
-                else ecb.DestroyEntity(SampleUnit);
-
-                if (x < mapMaker.number - 1)
-                {
-                    x++;
-                }
-                else
-                {
-                    break;
-                }
-                if (x >= 50)
-                {
-                    newteam = 1;
-                }
-            }
-            ecb.Playback(_entityManager);
-        }
     }
+
+    private Entity SelectEntity(Vector3 mousePosition)
+    {
+        Entity closestTile = Entity.Null; //return할 타일 엔티티 변수 선언
+
+        var query = _entityManager.CreateEntityQuery(typeof(MapTileAuthoringComponentData)); //맵 타일 엔티티 쿼링
+
+        var minSqrDist = distance * distance; //거리 계산을 위해 미리 제곱해주기
+        foreach (var entity in query.ToEntityArray(Allocator.Temp)) // 월드에 존재하는 모든 맵 타일 Entity를 가져와 전수조사
+        {
+
+            var entityPos = _entityManager.GetComponentData<MapTileAuthoringComponentData>(entity).index;
+
+            var dist = (mousePosition - new Vector3(entityPos.x, entityPos.y, mousePosition.z)).sqrMagnitude;
+            if (dist < minSqrDist)
+            {
+                //Debug.Log(entity);
+                closestTile = entity;
+                break;
+            }
+        }
+
+        return closestTile;
+    }
+
+    private void Spawn()
+    {
+        MapTileAuthoringComponentData clickedTile = _entityManager.GetComponentData<MapTileAuthoringComponentData>(_targetEntity);
+        if (clickedTile.soldier != 0) return;
+        MapMakerComponentData mapMaker = _entityManager.CreateEntityQuery(typeof(MapMakerComponentData)).GetSingleton<MapMakerComponentData>();
+
+        _spawnerEntity = _entityManager.CreateEntityQuery(typeof(SampleSpawnData)).GetSingletonEntity();
+        _sampleUnitEntity = _entityManager.GetComponentData<SampleSpawnData>(_spawnerEntity).SampleEntityPrefab;
+        _spawnNum = _entityManager.GetComponentData<SampleSpawnData>(_spawnerEntity).number;
+        //_toggleValue = _entityManager.GetComponentData<WhattoSpawn>(_spawnerEntity).ToggleValue;
+
+        /*
+        if (_toggleValue == 0)
+        {
+            return;
+        }
+        */
+
+        var SampleUnits = new NativeArray<Entity>(_spawnNum, Allocator.Temp);
+        var ecb = new EntityCommandBuffer(Allocator.Temp);
+        ecb.Instantiate(_sampleUnitEntity, SampleUnits);
+        var tileQuery = _entityManager.CreateEntityQuery(typeof(MapTileAuthoringComponentData));
+        var tiles = tileQuery.ToEntityArray(Allocator.Temp);
+
+        int x = 0;
+        int y = clickedTile.index.y;
+        int newteam = 0;
+        foreach (var SampleUnit in SampleUnits)
+        {
+            MapTileAuthoringComponentData currentTile = _entityManager.GetComponentData<MapTileAuthoringComponentData>(tiles[x + y * mapMaker.number]);
+            if (currentTile.soldier == 0)
+            {
+                ecb.SetComponent(SampleUnit, new SampleUnitComponentData
+                {
+                    index = new int2(x, y),
+                    hp = 3,
+                    movementspeed = 0.2f,
+                    dmg = 1,
+                    team = newteam
+                });
+                ecb.SetComponentEnabled<MovingTag>(SampleUnit, false);
+                ecb.SetComponentEnabled<AttackTag>(SampleUnit, false);
+                ecb.SetComponentEnabled<LazyTag>(SampleUnit, false);
+
+                ecb.SetComponent(SampleUnit, new LocalTransform()
+                {
+                    Position = new float3(x, y, 0),
+                    Scale = 5
+                });
+
+                currentTile.soldier = 1;
+                _entityManager.SetComponentData(tiles[x + y * mapMaker.number], currentTile);
+            }
+            else ecb.DestroyEntity(SampleUnit);
+
+            if (x < mapMaker.number - 1)
+            {
+                x++;
+            }
+            else
+            {
+                break;
+            }
+            if (x >= 50)
+            {
+                newteam = 1;
+            }
+        }
+        ecb.Playback(_entityManager);
+    }
+}
