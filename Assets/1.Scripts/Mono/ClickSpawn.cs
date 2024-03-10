@@ -119,7 +119,7 @@ public class ClickSpawn : MonoBehaviour
                 {
                     index = new int2(x, y),
                     hp = 3,
-                    movementspeed = 0.2f,
+                    movementspeed = 1f,
                     dmg = 1,
                     team = newteam
                 });
