@@ -33,7 +33,7 @@ namespace _1.Scripts.DOTS.System
             int x = 0;
             int y = 0;
             int newteam = 0;
-
+            int n = 0;
             MapMakerComponentData mapMaker = SystemAPI.GetSingleton<MapMakerComponentData>();
             var tileQuery = SystemAPI.QueryBuilder().WithAll<MapTileAuthoringComponentData>().Build();
             NativeArray<MapTileAuthoringComponentData> tiles = tileQuery.ToComponentDataArray<MapTileAuthoringComponentData>(Allocator.Temp);
@@ -44,7 +44,7 @@ namespace _1.Scripts.DOTS.System
                 {
                     index = new int2(x, y),
                     hp = 3,
-                    movementspeed = 1f,
+                    movementspeed = 1.5f,
                     dmg = 1,
                     team = newteam
                 });
@@ -54,7 +54,7 @@ namespace _1.Scripts.DOTS.System
                 
                 ecb.SetComponent(SampleUnit, new LocalTransform()
                 {
-                    Position = new float3 (x, y, 0),
+                    Position = new float3 (x, y*mapMaker.width, 0),
                     Scale = 5
                 });
                 
@@ -63,14 +63,23 @@ namespace _1.Scripts.DOTS.System
                 currentTile.soldier = 1;
                 tiles[x + mapMaker.number * y] = currentTile;
 
-                if (x < mapMaker.number - 1)
+                if (y < mapMaker.number - 1)
                 {
-                    x++;
+                    y++;
                 }
                 else
                 {
-                    x = 0;
-                    y++;
+                    y = 0;
+                    if (x < 6)
+                    {
+                        x++;
+                    }else if (x == 6)
+                    {
+                        x = 99;
+                    }else if (x > 6)
+                    {
+                        x--;
+                    }
                 }
                 if(x>=50){
                     newteam = 1;

@@ -107,12 +107,12 @@ public class ClickSpawn : MonoBehaviour
         var tileQuery = _entityManager.CreateEntityQuery(typeof(MapTileAuthoringComponentData));
         var tiles = tileQuery.ToEntityArray(Allocator.Temp);
 
-        int x = 0;
-        int y = clickedTile.index.y;
+        int x = clickedTile.index.x;
+        int y = 0;
         int newteam = 0;
         foreach (var SampleUnit in SampleUnits)
         {
-            MapTileAuthoringComponentData currentTile = _entityManager.GetComponentData<MapTileAuthoringComponentData>(tiles[x + y * mapMaker.number]);
+            MapTileAuthoringComponentData currentTile = _entityManager.GetComponentData<MapTileAuthoringComponentData>(tiles[y + x * mapMaker.number]);
             if(currentTile.soldier == 0)
             {
                 ecb.SetComponent(SampleUnit, new SampleUnitComponentData
@@ -129,7 +129,7 @@ public class ClickSpawn : MonoBehaviour
 
                 ecb.SetComponent(SampleUnit, new LocalTransform()
                 {
-                    Position = new float3(x, y, 0),
+                    Position = new float3(x, y*mapMaker.width, 0),
                     Scale = 5
                 });
 
@@ -138,9 +138,9 @@ public class ClickSpawn : MonoBehaviour
             }
             else ecb.DestroyEntity(SampleUnit);
 
-            if (x < mapMaker.number - 1)
+            if (y < mapMaker.number - 1)
             {
-                x++;
+                y++;
             }
             else
             {

@@ -42,7 +42,7 @@ namespace _1.Scripts.DOTS.System
                 
                 ecb.SetComponent(spriteTiles[i], new LocalTransform()
                 {
-                    Position = new float3(x * MapMaker.width, y * MapMaker.width, 0),
+                    Position = new float3(x, y * MapMaker.width, 0),
                     Scale = 1
                 });
 

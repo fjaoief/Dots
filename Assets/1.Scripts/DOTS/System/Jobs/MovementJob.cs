@@ -21,14 +21,14 @@ namespace _1.Scripts.DOTS.System.Jobs
         // excute 쿼리에 moving tag 추가 예정
         public void Execute(ref LocalTransform transform, EnabledRefRW<MovingTag> movingTag, ref SampleUnitComponentData sampleUnitComponentData)
         {
-            if (math.all(transform.Position == Int2tofloat3(sampleUnitComponentData.destIndex)*MapMaker.width))
+            if (math.all(transform.Position == Int2tofloat3(sampleUnitComponentData.destIndex)))
             {
                // Debug.Log("Cancel Moving Tag of "+sampleUnitComponentData.index +sampleUnitComponentData.destIndex);
                 sampleUnitComponentData.index = sampleUnitComponentData.destIndex;
                 movingTag.ValueRW = false;
             }
             else{
-                transform.Position = MoveTowards(transform.Position, Int2tofloat3(sampleUnitComponentData.destIndex)*MapMaker.width , Time*sampleUnitComponentData.movementspeed);
+                transform.Position = MoveTowards(transform.Position, Int2tofloat3(sampleUnitComponentData.destIndex) , Time*sampleUnitComponentData.movementspeed);
                 //Debug.Log("Moving entity" + sampleUnitComponentData.index);
                 // moving tag 취소
             }}
@@ -51,7 +51,7 @@ namespace _1.Scripts.DOTS.System.Jobs
     }
     //인덱스를 float3 형식으로 바꿔주는 코드
         public static float3 Int2tofloat3(int2 index){
-        return new float3(index.x,index.y,0);
+        return new float3(index.x,(float)index.y*0.6f,0);
     }
     }
     

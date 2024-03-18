@@ -155,7 +155,7 @@ MonoBehaviour:
   MapTilePrefab: {fileID: 8483260217440576703, guid: def60d172455c0a49882c91d61f6c785, type: 3}
   SpriteTilePrefab: {fileID: 8483260217440576703, guid: 39fe4906591059f4fad6b56fbfdcc28b, type: 3}
   number: 100
-  width: 1
+  width: 0.6
 --- !u!4 &168814104
 Transform:
   m_ObjectHideFlags: 0
@@ -201,7 +201,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sampleUnit: {fileID: 3488852757689818180, guid: e924a2f5840c5f4458f7ce4929c58063, type: 3}
-  number: 100
+  number: 1400
   ToggleValue: 0
   startFlag: 0
 --- !u!4 &1092078747
